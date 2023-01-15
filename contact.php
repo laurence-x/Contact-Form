@@ -18,6 +18,10 @@ if (!isset($_POST['tA'])) {
     $ms = "No message in post";
     goto end;
 }
+// if (!isset($_POST['cc'])) {
+//     $ms = "No cc in post";
+//     goto end;
+// }
 
 /* -------------------------------------------------------------------------- */
 
@@ -35,7 +39,7 @@ if (!cset('esd')) {
     $last = $emc[mb_strlen($emc) - 1];
     // if limit reached go to end
     if ($last == '2') {
-        $jres = "l";
+        $jres = "try again in 1h";
         goto end;
     } else {
         // add 2 at the end of nt before encrypt
@@ -75,13 +79,18 @@ mail($re, "Contact", "\nFrom: " . $name . "\n" . $email . "\n" . $phone . "\n"
 // $ms = "Contact email from: " . $name . "\n" . $phone . "\n"
 //     . $ip . "\n" . $email . "\nMessage: " . $tA;
 
-$jres = "s"; // sent
+$jres = "sent"; // sent
 
 /* -------------------------------------------------------------------------- */
 
 end:
+
 if ($ms) {
     lg($lg, $p, $tm, $ms);
+}
+
+if ($jres === "e") {
+    $res = "error sending email";
 }
 
 echo $jres;
