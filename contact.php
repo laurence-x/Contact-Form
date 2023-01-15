@@ -43,17 +43,6 @@ if (
         $ms = "No message in post";
         goto end;
     }
-    /*
-    if (
-        !isset($_POST['cc'])
-        || empty($_POST['cc'])
-        || $_POST['cc'] === null
-        || $_POST['cc'] === ''
-    ) {
-        $ms = "No cc in post";
-        goto end;
-    }
-    */
 
     /* ---------------------------------------------------------------------- */
 
@@ -98,9 +87,7 @@ if (
 
     /* ---------------------------------------------------------------------- */
 
-    //TODO: working only if sending smtp email, or to gmail addresses
     //~ to client
-    /*
     mail(
         $email,
         "Contact",
@@ -108,7 +95,6 @@ if (
         $from
     );
     sleep(2);
-    */
 
     //~ to admin
     mail(
@@ -116,12 +102,12 @@ if (
         "Contact",
         "\nFrom: " . $name . "\n" . $email . "\n" . $phone . "\n" .
             $ip . "\n\nMessage:\n" . $tA . "\n\n",
-        $from
+        "From:$ae \r\nReply-To:$email"
     );
 
     //~ to logs
-    // $ms = "Contact email from: " . $name . "\n" . $phone . "\n"
-    //     . $ip . "\n" . $email . "\nMessage: " . $tA;
+    $ms = "Contact email from: " . $name . "\n" . $phone . "\n"
+        . $ip . "\n" . $email . "\nMessage: " . $tA;
 
     $jres = "sent"; // sent
 }
