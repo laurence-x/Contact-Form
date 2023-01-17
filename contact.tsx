@@ -6,9 +6,8 @@ import KeyupEm from "./keyupEm"
 import KeyupTe from "./keyupTe"
 import KeyupTx from "./keyupTx"
 
-import { ActTps } from "./atypes"
 import checks from "./checks"
-import { iniState, reducer } from "./reducer"
+import { initialStt, reducer } from "./reducer"
 
 export default function Contact() {
     const iN = useRef<HTMLInputElement>(null!)
@@ -19,7 +18,7 @@ export default function Contact() {
     const ms = useRef<HTMLParagraphElement>(null!)
     const iB = useRef<HTMLInputElement>(null!)
     const rD = useRef<HTMLDivElement>(null!)
-    const [ state, dispatch ] = useReducer(reducer, iniState)
+    const [ state, dispatch ] = useReducer(reducer, initialStt)
     const nvg = useNavigate()
 
     const kupNm = () => BtnMsg(ms, iB)
@@ -32,8 +31,8 @@ export default function Contact() {
 
         if (checks({ iN, iT, iE, iE2, tA, ms })) {
             dispatch({
-                type: ActTps.fnRun,
-                payload: undefined,
+                type: "run",
+                payload: "",
             })
 
             let frmDta = new FormData()
@@ -50,14 +49,17 @@ export default function Contact() {
                 signal: controller.signal,
             })
                 .then((res) => res.text())
-                .then((data) => {
-                    dispatch({ type: ActTps.fnOky, payload: data })
+                .then((dta) => {
+                    dispatch({
+                        type: "oky",
+                        payload: String(dta),
+                    })
                 })
                 .catch((err) => {
-                    console.error("Error Contact: ", err)
+                    console.error("Error Contact: ", String(err))
                     dispatch({
-                        type: ActTps.fnErr,
-                        payload: err,
+                        type: "err",
+                        payload: String(err),
                     })
                 })
 
@@ -71,21 +73,19 @@ export default function Contact() {
 
     return (
         <>
-            {state.result || state.error ? (
+            {state.isOky || state.isErr ? (
                 <div className="center">
-                    <div>
-                        {state.result}
-                        {state.error}
+                    <div className="m y">
+                        {state.data}
                     </div>
                 </div>
-            ) : state.loading ? (
+            ) : state.isLdg ? (
                 <div className="center">
-                    <p>sending...</p>
+                    <p className="m y">sending...</p>
                 </div>
             ) : (
                 <div className="l c" ref={rD}>
                     <b className="h">Contact</b>
-                    <br />
                     <input
                         name="iN"
                         type="text"
